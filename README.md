@@ -1,73 +1,43 @@
-# React + TypeScript + Vite
+# Budget Flow (React + TypeScript + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend en React + TypeScript para gestionar presupuesto mensual y gastos usando la API de Google Apps Script.
 
-Currently, two official plugins are available:
+## Caracteristicas
+- Registro y login de usuario; token y user se guardan en localStorage.
+- Rutas protegidas con react-router-dom y contexto de autenticacion.
+- Pantallas de dashboard, configuracion de presupuesto y registro de gastos.
+- Cliente API reutilizable (src/api/client.ts) usando la base URL configurada por env.
+- Estilos basicos en src/styles/global.css listos para deploy en Vercel.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Requisitos previos
+- Node 18+
+- npm (o pnpm/yarn si prefieres)
 
-## React Compiler
+## Configuracion
+1) Instalar dependencias
+```bash
+npm install
+```
+2) Crear un archivo `.env` en la raiz con la base URL de la API
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+3) Correr la app en desarrollo
+```bash
+npm run dev
+```
+4) Build listo para deploy (Vercel usa este comando)
+```bash
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Rutas principales
+- `/login` y `/register`: auth via API (register/login).
+- `/app/dashboard`: resumen de ingreso, ahorro, gastos fijos y variables.
+- `/app/budget`: carga/edicion del presupuesto (periodo, ingreso, ahorro, gastos fijos).
+- `/app/expenses`: listado de gastos y formulario de alta rapida.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## API integrada
+Las llamadas usan el endpoint unico con acciones:
+- POST action `register`, `login`, `saveBudget`, `addExpense`
+- GET action `getBudget`, `getExpenses` (requiere token)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Token invalido redirige a login. Si no hay presupuesto cargado, el formulario se muestra vacio.
