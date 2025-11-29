@@ -7,8 +7,6 @@ export default defineConfig({
     proxy: {
       // Todo lo que vaya a /apps-script se rebota a Apps Script
       "/apps-script": {
-        target:
-          "https://script.google.com/macros/s/AKfycbz5twJK0-ugiiRpM-pIgPyq2P9IWMXnaoWCevW9utU7FfcGixB8OwDFGhXUAvlmAAQ/exec",
         changeOrigin: true,
         secure: true,
         // Quitamos el prefijo /apps-script al reenviar
